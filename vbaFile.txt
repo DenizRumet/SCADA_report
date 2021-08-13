@@ -1,0 +1,117 @@
+Sub PreRapor()
+'
+' PreRapor Makro
+'
+
+'
+    ActiveSheet.Range("$A$1:$R$1885").AutoFilter Field:=1, Criteria1:="<>"
+    Range("A2").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.EntireRow.Delete
+    ActiveSheet.ShowAllData
+    Columns("A:A").Select
+    Selection.Delete Shift:=xlToLeft
+    Selection.NumberFormat = "m/d/yyyy"
+    Columns("C:C").Select
+    Selection.NumberFormat = "[$-x-systime]h:mm:ss AM/PM"
+    Selection.NumberFormat = "hh:mm;@"
+    Columns("D:D").Select
+    Selection.Delete Shift:=xlToLeft
+    Columns("B:B").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("B1").Select
+    ActiveCell.FormulaR1C1 = "ay indis"
+    Range("C1").Select
+    ActiveCell.FormulaR1C1 = "yıl indis"
+    Range("B2").Select
+    ActiveCell.FormulaR1C1 = "=MONTH(RC[-1])"
+    Range("B2").Select
+    Selection.NumberFormat = "General"
+    Selection.AutoFill Destination:=Range("B2:B1117")
+    Range("B2:B1117").Select
+    Range("C2").Select
+    ActiveCell.FormulaR1C1 = "=YEAR(RC[-2])"
+    Range("C2").Select
+    Selection.NumberFormat = "General"
+    Selection.AutoFill Destination:=Range("C2:C1117")
+    Range("C2:C1117").Select
+    Columns("F:F").Select
+    Selection.Delete Shift:=xlToLeft
+    Columns("E:E").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Columns("E:E").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("G1").Select
+    ActiveCell.FormulaR1C1 = "arıza bildirimi"
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = "bölge"
+    Range("F1").Select
+    ActiveCell.FormulaR1C1 = "ilçe"
+    Range("G2").Select
+    ActiveCell.FormulaR1C1 = "SCADA"
+    Selection.AutoFill Destination:=Range("G2:G1117")
+    Range("G2:G1117").Select
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 3
+    Columns("K:S").Select
+    Selection.Delete Shift:=xlToLeft
+    Columns("I:I").Select
+    Selection.Cut
+    Range("K1").Select
+    ActiveSheet.Paste
+    Columns("I:I").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("I1").Select
+    ActiveCell.FormulaR1C1 = "hücre"
+    Range("J1").Select
+    ActiveCell.FormulaR1C1 = "fider"
+    Range("I2").Select
+    ActiveCell.FormulaR1C1 = "=LEFT(RC[3],3)"
+    Range("I2").Select
+    Selection.AutoFill Destination:=Range("I2:I1117")
+    Range("I2:I1117").Select
+    Range("J2").Select
+    ActiveCell.FormulaR1C1 = "=RIGHT(RC[2],LEN(RC[2])-4)"
+    Range("J2").Select
+    Selection.AutoFill Destination:=Range("J2:J1117")
+    Range("J2:J1117").Select
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 1
+    Columns("L:L").Select
+    Selection.EntireColumn.Hidden = True
+    
+    
+    Dim wscada As Worksheet
+    Dim wistasyon As Worksheet
+    Dim wbolge As Worksheet
+    
+    Set wscada = Sheets("Scada")
+    Set wistasyon = Sheets("IstasyonListesi")
+    Set wbolge = Sheets("Bölge")
+    
+    For k = 2 To 555
+    scada_ist = wscada.Cells(k, 8)
+        For m = 2 To 99
+        istasyon = wistasyon.Cells(m, 2)
+            If InStr(scada_ist, istasyon) Then
+            Ilce = wistasyon.Cells(m, 1)
+                For n = 2 To 48
+                Ilce_B = wbolge.Cells(n, 1)
+                    If Ilce = Ilce_B Then
+                    With wscada
+                    .Cells(k, 6) = Ilce
+                    .Cells(k, 5) = wbolge.Cells(n, 2)
+                    End With
+                    End If
+                   
+                Next n
+                    
+            End If
+            
+        Next m
+    Next k
+
+
+End Sub
